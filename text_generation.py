@@ -45,4 +45,9 @@ def generate_caption(image_path):
     except Exception as e:
         print(f"Lỗi trong generate_caption: {str(e)}")
         return None
+if __name__ == '__main__':
+    image_path = r"D:\code DAP\Ảnh test\Shoe\istockphoto-1350560575-612x612.jpg"
+    
+    caption = generate_caption(image_path)
+    print(f"📝 Caption: {caption}")
 

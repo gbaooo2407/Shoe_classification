@@ -2,12 +2,12 @@ import os
 from datasets import load_dataset, Dataset, concatenate_datasets, ClassLabel, Features, Image
 from PIL import Image as PILImage
 
-def load_and_prepare_dataset(extra_images_dir, high_heel_dir,slipper_dir, processed_dataset_path='processed_dataset'):
+def load_and_prepare_dataset(extra_images_dir, high_heel_dir, processed_dataset_path='processed_dataset'):
     # Load dataset ban đầu từ Hugging Face
     dataset = load_dataset("Andyrasika/ShoeSandalBootimages")
 
     # Cập nhật nhãn mới
-    new_labels = dataset['train'].features['label'].names + ["High Heel","Slipper"]
+    new_labels = dataset['train'].features['label'].names + ["High Heel"]
     class_label = ClassLabel(names=new_labels)
 
     # Định nghĩa kiểu dữ liệu (Feature)
@@ -15,7 +15,6 @@ def load_and_prepare_dataset(extra_images_dir, high_heel_dir,slipper_dir, proces
         "image": Image(),
         "label": class_label
     })
-    print("Label mapping:", label_mapping)
     label_mapping = {label: i for i, label in enumerate(new_labels)}
 
     #Hàm load & resize ảnh 
@@ -45,17 +44,10 @@ def load_and_prepare_dataset(extra_images_dir, high_heel_dir,slipper_dir, proces
     
     high_heel_dataset = Dataset.from_list(high_heel_data).cast(features)
 
-    # Load ảnh Slipper
-    slipper_data = [{
-        "image": load_image(os.path.join(slipper_dir, img)),
-        "label": label_mapping["Slipper"]
-    } for img in os.listdir(slipper_dir) if img.lower().endswith(('png', 'jpg', 'jpeg'))]
-    
-    slipper_dataset = Dataset.from_list(slipper_data).cast(features)
 
     # Merge toàn bộ dataset
     dataset["train"] = dataset["train"].cast(features)
-    new_dataset = concatenate_datasets([dataset['train'], extra_dataset, high_heel_dataset, slipper_dataset])
+    new_dataset = concatenate_datasets([dataset['train'], extra_dataset, high_heel_dataset])
 
     # Lưu dataset để sử dụng sau này 
     new_dataset.save_to_disk(processed_dataset_path)

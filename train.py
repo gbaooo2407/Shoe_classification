@@ -5,9 +5,11 @@ import torch.optim as optim
 from tqdm import tqdm
 import json
 
-def train_model(model, train_loader, val_loader, device, num_epochs, model_name, best_model_path, scheduler=None):
+def train_model(model, train_loader, val_loader, device, num_epochs, best_model_path, scheduler=None):
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
+    optimizer = optim.AdamW(model.parameters(), lr=5e-5, weight_decay=1e-4)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs)
+    scaler = torch.cuda.amp.GradScaler()  # Mixed Precision Training
     
     training_log = {
         'epoch': [],
@@ -29,10 +31,15 @@ def train_model(model, train_loader, val_loader, device, num_epochs, model_name,
         for images, labels in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+            
+            with torch.cuda.amp.autocast():
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+            
+            scaler.scale(loss).backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)  # Gradient Clipping
+            scaler.step(optimizer)
+            scaler.update()
             
             running_loss += loss.item() * images.size(0)
             _, preds = torch.max(outputs, 1)
@@ -59,8 +66,7 @@ def train_model(model, train_loader, val_loader, device, num_epochs, model_name,
         val_loss /= val_total
         val_accuracy = val_correct / val_total
         
-        if scheduler:
-            scheduler.step(val_loss)
+        scheduler.step()
         
         training_log['epoch'].append(epoch + 1)
         training_log['train_loss'].append(train_loss)

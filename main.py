@@ -6,11 +6,9 @@ from models import CNNModel, HybridResNetEfficientNet, create_vit_model
 from train import train_model
 from utils import get_device, print_device_info
 from exploratory import plot_random_images, print_dataset_statistics, print_average_image_size
-from gradcam_visualize import apply_gradcam
 import subprocess
 import os
 from compare import compare_models
-
 
 def menu():
     menu = """
@@ -39,7 +37,6 @@ def func2():
     processed_dataset_path = "processed_dataset"  # Đường dẫn file dataset đã xử lý
     high_heel_dir = r"D:\code DAP\High Heel"
     extra_images_dir = r"D:\code DAP"  # Chứa các folder Boot, Sandal, Shoe
-    slipper_dir = r"D:\code DAP\Slipper"
 
     # Kiểm tra xem dataset đã được xử lý trước đó chưa
     if os.path.exists(processed_dataset_path):
@@ -47,7 +44,7 @@ def func2():
         dataset = load_processed_dataset(processed_dataset_path)
     else:
         print("Processing and saving dataset for the first time...")
-        dataset = load_and_prepare_dataset(extra_images_dir, high_heel_dir,slipper_dir, processed_dataset_path)
+        dataset = load_and_prepare_dataset(extra_images_dir, high_heel_dir, processed_dataset_path)
     return dataset
 
 def func3(dataset):
@@ -82,17 +79,19 @@ def func4(dataset=None):
 def func5(num_classes, device, train_loader, val_loader):
     cnn_model = CNNModel(num_classes).to(device)
     train_model(cnn_model, train_loader, val_loader, device, num_epochs=30,
-                model_name="cnn", best_model_path="best_model_cnn.pth")
+                 best_model_path="best_model_cnn.pth")
 
 def func6(num_classes, device, train_loader, val_loader):
     hybrid_model = HybridResNetEfficientNet(num_classes).to(device)
     train_model(hybrid_model, train_loader, val_loader, device, num_epochs=30,
-                model_name="hybrid", best_model_path="best_model_hybrid.pth")
+                 best_model_path="best_model_hybrid.pth")
 
 def func7(num_classes, device, train_loader, val_loader):
     vit_model = create_vit_model(num_classes).to(device)
     train_model(vit_model, train_loader, val_loader, device, num_epochs=30,
-                model_name="vit", best_model_path="best_model_vit.pth")
+                     best_model_path="best_model_vit.pth")
+
+
 
 def func8():
     try:

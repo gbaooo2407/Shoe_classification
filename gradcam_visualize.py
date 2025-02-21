@@ -12,7 +12,7 @@ def apply_gradcam(image_path: str, model, device, class_names=None, target_layer
     Áp dụng Grad-CAM++ lên một ảnh duy nhất.
     
     Args:
-        image (PIL.Image): Ảnh đầu vào.
+        image_path (str): Đường dẫn tới ảnh đầu vào.
         model (torch.nn.Module): Mô hình đã được load.
         device (str): Thiết bị ('cuda' hoặc 'cpu').
         class_names (list, optional): Danh sách tên các lớp.
@@ -24,33 +24,31 @@ def apply_gradcam(image_path: str, model, device, class_names=None, target_layer
     model.eval()
 
     # Xác định target_layer nếu chưa có
-    model_name = type(model).__name__
-    if target_layer is None:
-        if "HybridResNetEfficientNet" in model_name:
-            target_layer = model.effnet._conv_head  
-        elif "VisionTransformer" in model_name or "ViT" in model_name:
-            target_layer = model.blocks[-1].mlp.fc2  
-        elif "ResNet" in model_name:
-            target_layer = list(model.children())[-2]  
-        elif "CNNModel" in model_name:
-            target_layer = model.conv2  
-        else:
-            raise ValueError(f"Unsupported model type: {model_name}")
+    # model_name = type(model).__name__
+    # if target_layer is None:
+    #     if "HybridResNetEfficientNet" in model_name:
+    #     elif "VisionTransformer" in model_name or "ViT" in model_name:
+    #         target_layer = model.blocks[0].attn  # Sử dụng lớp attention đầu tiên của ViT
+    #     elif "ResNet" in model_name:
+    #         target_layer = list(model.children())[-2]  
+    #     elif "CNNModel" in model_name:
+    #         target_layer = model.conv2  
+    #     else:
+    #         raise ValueError(f"Unsupported model type: {model_name}")
+    target_layer = model.effnet._conv_head  
 
     # Khởi tạo Grad-CAM++
     cam_extractor = GradCAMPlusPlus(model, [target_layer])
+    
     # Tiền xử lý ảnh
-    # Đọc lại ảnh từ file
     image = Image.open(image_path).convert("RGB")
 
-        # Tiền xử lý ảnh
     transform = transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize((224, 224)),  # Resize ảnh về 224x224 cho ViT
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Mean, Std của ViT
+    ])
     input_tensor = transform(image).unsqueeze(0).to(device)
-
 
     # Dự đoán lớp
     with torch.no_grad():
