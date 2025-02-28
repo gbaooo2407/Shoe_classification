@@ -1,5 +1,5 @@
 import torch
-from data_preparation import load_and_prepare_dataset, load_processed_dataset
+from load_dataset import ZapposDataset 
 from datasets import load_dataset
 from data_loader import create_dataloaders
 from models import CNNModel, HybridResNetEfficientNet, create_vit_model
@@ -34,17 +34,16 @@ def func1():
     return device
 
 def func2():
-    processed_dataset_path = "processed_dataset"  # Đường dẫn file dataset đã xử lý
-    high_heel_dir = r"D:\code DAP\High Heel"
-    extra_images_dir = r"D:\code DAP"  # Chứa các folder Boot, Sandal, Shoe
+    image_dir = "path/to/Zappos/images"
+    meta_data_path = "path/to/Zappos/metadata.csv"
 
-    # Kiểm tra xem dataset đã được xử lý trước đó chưa
-    if os.path.exists(processed_dataset_path):
-        print("Loading processed dataset...")
-        dataset = load_processed_dataset(processed_dataset_path)
-    else:
-        print("Processing and saving dataset for the first time...")
-        dataset = load_and_prepare_dataset(extra_images_dir, high_heel_dir, processed_dataset_path)
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+    ])
+
+    dataset = ZapposDataset(image_dir, meta_data_path, transform=transform)
+    print("Dataset loaded successfully")
     return dataset
 
 def func3(dataset):
@@ -141,21 +140,21 @@ def main():
             if dataset is None or device is None or train_loader is None or val_loader is None:
                 print("Please load dataset and initialize device first!")
                 continue
-            num_classes = len(dataset.features['label'].names)
+            num_classes = len(set(dataset.descriptions))
             func5(num_classes, device, train_loader, val_loader)
 
         elif selection == 6:
             if dataset is None or device is None or train_loader is None or val_loader is None:
                 print("Please load dataset and initialize device first!")
                 continue
-            num_classes = len(dataset.features['label'].names)
+            num_classes = len(set(dataset.descriptions))
             func6(num_classes, device, train_loader, val_loader)
 
         elif selection == 7:
             if dataset is None or device is None or train_loader is None or val_loader is None:
                 print("Please load dataset and initialize device first!")
                 continue
-            num_classes = len(dataset.features['label'].names)
+            num_classes = len(set(dataset.descriptions))
             func7(num_classes, device, train_loader, val_loader)
 
         elif selection == 8:
