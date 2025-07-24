@@ -1,10 +1,10 @@
-# 🥿 XAI-KICKVISION: Explainable Multimodal AI for Shoe Recognition & Recommendation
+ 🥿 XAI-KICKVISION: Explainable Multimodal AI for Shoe Recognition & Recommendation
 
 A hybrid AI system that classifies and recommends shoes using both **images** and **product descriptions**, combining **ResNet18**, **Vision Transformer (ViT)**, and **DistilBERT**. This system leverages **multimodal learning** and **Grad-CAM++** to improve both **accuracy** and **interpretability**, optimized for **e-commerce applications**.
 
 ---
 
-## 📌 Table of Contents
+ 📌 Table of Contents
 
 - [Features](#-features)
 - [Project Goals](#-project-goals)
@@ -21,7 +21,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 🔍 Features
+ 🔍 Features
 
 - ✅ Multimodal learning with **image + text**
 - ✅ Integrated **ResNet18**, **ViT**, and **DistilBERT**
@@ -30,7 +30,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 🎯 Project Goals
+ 🎯 Project Goals
 
 - Recommend and classify shoes using product images and descriptions.
 - Provide visual explanations for predictions (trustworthy AI).
@@ -39,7 +39,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 🧠 Architecture
+ 🧠 Architecture
 
 
      +-----------+        +-------------+
@@ -62,7 +62,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 🧪 Techniques Used
+ 🧪 Techniques Used
 
 - Multimodal Learning
 - Grad-CAM++ (Explainability)
@@ -71,7 +71,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 🛠️ Technologies
+ 🛠️ Technologies
 
 - **PyTorch**
 - **Torchvision**
@@ -81,7 +81,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 📁 Dataset
+ 📁 Dataset
 
 - Internal dataset of shoe images + product descriptions
 - Labeled for classification and similarity recommendation
@@ -91,7 +91,7 @@ A hybrid AI system that classifies and recommends shoes using both **images** an
 
 ---
 
-## 📈 Results
+ 📈 Results
 
 | Metric             | Value        |
 |--------------------|--------------|
