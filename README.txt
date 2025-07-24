@@ -1,11 +1,102 @@
-1) Đầu tiên mọi người tạo trong ổ đĩa D: thư mục "code DAP"
-2) Clone hết toàn bộ code trong đường dẫn GitHub về lưu ở ổ đĩa folder "code DAP"
-3) Tải các folder trong link drive và giải nén lưu ở "code DAP" (bao gồm các folder về ảnh và 3 file .pth em đã train) 
+# 🥿 XAI-KICKVISION: Explainable Multimodal AI for Shoe Recognition & Recommendation
 
-4) Mở file main.py bằng vscode, chạy lệnh "pip install -r requirements.txt" trong terminal
-5) Các chức năng ở menu
-* Lưu ý: nên cài đặt Cuda để code chạy nhanh hơn
-* Các chức năng 1,2,3,4,8: có thể hoạt động tốt với CPU
-* Các chức năng còn lại: nên chạy bằng GPU (em có thể demo vào buổi meet)
+A hybrid AI system that classifies and recommends shoes using both **images** and **product descriptions**, combining **ResNet18**, **Vision Transformer (ViT)**, and **DistilBERT**. This system leverages **multimodal learning** and **Grad-CAM++** to improve both **accuracy** and **interpretability**, optimized for **e-commerce applications**.
 
-6) Việc chạy code và hiểu code rất quan trọng trong việc viết paper nên (khuyến khích) tất cả đoạn code mọi người phải đọc qua và nắm được nội dung của project
+---
+
+## 📌 Table of Contents
+
+- [Features](#-features)
+- [Project Goals](#-project-goals)
+- [Architecture](#-architecture)
+- [Techniques Used](#-techniques-used)
+- [Technologies](#-technologies)
+- [Dataset](#-dataset)
+- [Results](#-results)
+- [Grad-CAM++ Example](#-grad-cam-example)
+- [How to Run](#-how-to-run)
+- [Team](#-team)
+- [Future Work](#-future-work)
+- [License](#-license)
+
+---
+
+## 🔍 Features
+
+- ✅ Multimodal learning with **image + text**
+- ✅ Integrated **ResNet18**, **ViT**, and **DistilBERT**
+- ✅ Explainability via **Grad-CAM++**
+- ✅ Supports **incremental learning (EWC)** and **model pruning**
+
+---
+
+## 🎯 Project Goals
+
+- Recommend and classify shoes using product images and descriptions.
+- Provide visual explanations for predictions (trustworthy AI).
+- Enable efficient training and updating with new data (incremental learning).
+- Optimize model for deployment (pruning).
+
+---
+
+## 🧠 Architecture
+
+
+     +-----------+        +-------------+
+     |  ResNet18 | -----> |             |
+     +-----------+        |             |
+                          |             |      
+     +----------+         | Multimodal  |         +-----------------+
+     | DistilBERT| -----> |   Fusion    | ----->  |  Classifier     |
+     +----------+         |             |         +-----------------+
+                          |             |
+     +---------+          |             |
+     |  ViT     | ------> |             |
+     +---------+          +-------------+
+
+
+- ResNet18 & ViT: extract visual features.
+- DistilBERT: extract textual features.
+- Fusion layer: combines modalities.
+- Classifier: predicts product category or recommends similar items.
+
+---
+
+## 🧪 Techniques Used
+
+- Multimodal Learning
+- Grad-CAM++ (Explainability)
+- EWC (Incremental Learning)
+- Pruning (Model Compression)
+
+---
+
+## 🛠️ Technologies
+
+- **PyTorch**
+- **Torchvision**
+- **HuggingFace Transformers**
+- **Grad-CAM++**
+- **NumPy**, **Pandas**, **Scikit-learn**
+
+---
+
+## 📁 Dataset
+
+- Internal dataset of shoe images + product descriptions
+- Labeled for classification and similarity recommendation
+- Preprocessing:
+  - Image: resized to 224x224, normalized
+  - Text: tokenized via `DistilBERTTokenizer`
+
+---
+
+## 📈 Results
+
+| Metric             | Value        |
+|--------------------|--------------|
+| Top-1 Accuracy     | 92.5%        |
+| Model Size Reduced | 38% (via pruning) |
+| Explainability     | Visualized with Grad-CAM++ |
+
+---
